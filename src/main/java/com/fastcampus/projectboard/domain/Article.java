@@ -4,13 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -24,9 +19,9 @@ import java.util.Set;
         @Index(columnList = "createdBy")
 })
 //index를 해주는 이유는 search할때 편리하라고!
-@EntityListeners(AuditingEntityListener.class)
+
 @Entity
-public class Article {
+public class Article extends AuditingFields{
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY )  //mysql의 autoincrement는 Identitiy 방식으로 만들어진다!
     private Long id; //id는 사용자가 부여하는게 아니라 jpa가 영속성을 연속화 할때 자동으로 부여되는 번호
@@ -40,10 +35,13 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
+    /* ArticleComment 에서도 반복되는 필드이므로 AuditingFields 클래스로 묶는 방식을 사용
+
     @CreatedDate @Column(nullable = false) private LocalDateTime createdAt; //생성일시
     @CreatedBy @Column(nullable = false, length = 100) private String createdBy; //생성자
     @LastModifiedDate @Column(nullable = false) private LocalDateTime modifiedAt; //수정일시
     @LastModifiedBy @Column(nullable = false, length = 100) private String modifiedBy; //수정자
+    */
 
 
     //기본생성자

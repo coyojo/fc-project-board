@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@EntityListeners(AuditingEntityListener.class)
+
 @Entity
 @Getter
 @Table(indexes = {
@@ -20,7 +20,7 @@ import java.util.Objects;
         @Index(columnList = "createdAt"),
         @Index(columnList = "createdBy")
 })
-public class ArticleComment {
+public class ArticleComment extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,11 +29,12 @@ public class ArticleComment {
     // (댓글을 기준으로 댓글 여러개가 하나의 article을 참조하므로 다대일 관계)
    @Setter @Column(nullable = false, length = 500)  private String content;  //본문
 
+    /* Article 필드에서도 반복되는 부분이므로 AuditingFields 클래스로 묶는 방식 사용
     @CreatedDate @Column(nullable = false) private LocalDateTime createdAt;
     @CreatedBy @Column(nullable = false,length = 100) private String createdBy;
     @LastModifiedDate  @Column(nullable = false) private LocalDateTime modifiedAt;
     @LastModifiedBy @Column(nullable = false,length = 100) private String modifiedBy;
-
+    */
     protected ArticleComment() {}
 
     private ArticleComment(Article article, String content) {
